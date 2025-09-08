@@ -16,9 +16,7 @@
 
         /* ===== HEADER ===== */
         .header{background:var(--panel);border-bottom:1px solid var(--divider);}
-        .header__inner{max-width:960px;margin:0 auto;padding:16px;text-align:center;}
-        .header__inner a{display:inline-block;text-decoration:none;font-weight:700;font-size:20px;color:var(--text);padding:8px 14px;border-radius:var(--radius);border:1px solid var(--divider);transition:.18s all}
-        .header__inner a:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.5)}
+        .header__inner{max-width:960px;margin:0 auto;padding:16px;text-align:center;font-weight:700;font-size:20px;}
 
         /* ===== MAIN ===== */
         .content{display:grid;place-items:center;padding:32px}
@@ -43,9 +41,7 @@
 <body>
 <div class="page">
     <header class="header">
-        <div class="header__inner">
-            <a href="index.html">Tennis Scoreboard</a>
-        </div>
+        <div class="header__inner">Tennis Scoreboard</div>
     </header>
 
     <main class="content">
@@ -57,8 +53,9 @@
         </section>
     </main>
 
-    <footer class="footer">© Твоё приложение Tennis Scoreboard</footer>
+    <footer class="footer">by Syrym Sabyrzhan</footer>
 </div>
 </body>
 </html>
+
 
