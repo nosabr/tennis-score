@@ -48,7 +48,7 @@
         <section class="card">
             <nav class="menu">
                 <a class="btn btn--primary" href="${pageContext.request.contextPath}/new-match">New match</a>
-                <a class="btn btn--secondary" href="scoreboard.html">Scoreboard</a>
+                <a class="btn btn--secondary" href="${pageContext.request.contextPath}/matches">Scoreboard</a>
             </nav>
         </section>
     </main>
