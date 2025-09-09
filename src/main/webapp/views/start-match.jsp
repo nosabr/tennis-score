@@ -63,7 +63,7 @@
         </section>
     </main>
 
-    <footer class="footer">© Твоё приложение Tennis Scoreboard</footer>
+    <footer class="footer">by Syrym Sabyrzhan</footer>
 </div>
 
 <script>
