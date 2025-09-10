@@ -2,7 +2,7 @@ package com.example.tennisscoreboard2025.entity;
 
 import java.util.UUID;
 
-public class Match {
+public class OngoingMatches {
     private int player1ID;
     private int player2ID;
     private UUID uuid;
