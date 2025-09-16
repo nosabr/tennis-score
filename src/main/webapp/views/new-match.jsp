@@ -26,7 +26,7 @@
         .form{display:grid;gap:14px}
         .field{display:grid;gap:6px}
         .label{color:var(--muted);font-size:14px}
-        .input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--divider);background:#0f1522;color:var(--text)}
+        .input{padding:12px 14px;border-radius:10px;border:1px solid var(--divider);background:#0f1522;color:var(--text)}
         .input:focus{outline:none;border-color:rgba(34,211,238,.5);box-shadow:0 0 0 3px rgba(34,211,238,.25)}
 
         .actions{margin-top:4px;display:grid;gap:10px}
@@ -46,17 +46,17 @@
 
     <main class="content">
         <section class="card" aria-label="Новый матч">
-            <form class="form" id="newMatchForm" novalidate>
+            <form class="form" id="newMatchForm" action="new-match" method="post" novalidate>
                 <div class="field">
-                    <label class="label" for="p1">Имя игрока A</label>
-                    <input class="input" id="p1" name="p1" type="text" autocomplete="off" placeholder="Напр. Novak" required />
+                    <label class="label" for="p1">Player 1</label>
+                    <input class="input" id="p1" name="p1" type="text" autocomplete="off" placeholder="Ex. Novak" required />
                 </div>
                 <div class="field">
-                    <label class="label" for="p2">Имя игрока B</label>
-                    <input class="input" id="p2" name="p2" type="text" autocomplete="off" placeholder="Напр. Carlos" required />
+                    <label class="label" for="p2">Player 2</label>
+                    <input class="input" id="p2" name="p2" type="text" autocomplete="off" placeholder="Ex. Carlos" required />
                 </div>
                 <div class="actions">
-                    <button type="submit" class="btn">Запустить игру</button>
+                    <button type="submit" class="btn">Start game</button>
                     <div id="error" class="error" aria-live="polite"></div>
                 </div>
             </form>
