@@ -39,3 +39,4 @@ build/
 
 .gitignore
 /todo.txt
+/.idea/
