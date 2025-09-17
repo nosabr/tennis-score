@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Используем Hikari как провайдер соединений -->
+        <property name="hibernate.connection.provider_class">
+            com.zaxxer.hikari.hibernate.HikariConnectionProvider
+        </property>
+
+        <!-- === DEV (H2) ВАРИАНТ === -->
+        <!-- Вариант 1: через jdbcUrl -->
+        <property name="hibernate.hikari.jdbcUrl">jdbc:h2:./db/tennis;AUTO_SERVER=TRUE</property>
+        <property name="hibernate.hikari.username">sa</property>
+        <property name="hibernate.hikari.password">123</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
+
+        <!-- === PROD (PostgreSQL) ВАРИАНТ — раскомментируй при переходе ===
+        <property name="hibernate.hikari.jdbcUrl">jdbc:postgresql://localhost:5432/tennis</property>
+        <property name="hibernate.hikari.username">postgres</property>
+        <property name="hibernate.hikari.password">secret</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        -->
+
+        <!-- Размеры пула -->
+        <property name="hibernate.hikari.maximumPoolSize">10</property>
+        <property name="hibernate.hikari.minimumIdle">2</property>
+        <property name="hibernate.hikari.connectionTimeout">30000</property>
+
+        <!-- Поведение схемы и логирование -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Маппинги сущностей -->
+        <mapping class="com.example.tennisscoreboard2025.models.Player"/>
+        <mapping class="com.example.tennisscoreboard2025.models.Match"/>
+
+    </session-factory>
+</hibernate-configuration>
