@@ -1,4 +1,4 @@
-package com.example.tennisscoreboard2025.entity;
+package com.example.tennisscoreboard2025.models;
 
 import jakarta.persistence.*;
 

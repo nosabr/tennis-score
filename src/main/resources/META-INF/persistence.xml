@@ -1,7 +1,7 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
     <persistence-unit name="tennisPU" transaction-type="RESOURCE_LOCAL">
-        <class>com.example.tennisscoreboard2025.entity.Player</class>
-        <class>com.example.tennisscoreboard2025.entity.FinishedMatches</class>
+        <class>com.example.tennisscoreboard2025.models.Player</class>
+        <class>com.example.tennisscoreboard2025.models.Match</class>
 
         <properties>
             <!-- JDBC -->
