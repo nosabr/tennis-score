@@ -12,17 +12,10 @@
 
         <!-- === DEV (H2) ВАРИАНТ === -->
         <!-- Вариант 1: через jdbcUrl -->
-        <property name="hibernate.hikari.jdbcUrl">jdbc:h2:./db/tennis;AUTO_SERVER=TRUE</property>
-        <property name="hibernate.hikari.username">sa</property>
-        <property name="hibernate.hikari.password">123</property>
+        <property name="hibernate.hikari.jdbcUrl">jdbc:h2:mem:tennisscore;AUTO_SERVER=TRUE</property>
+        <property name="hibernate.hikari.username">admin</property>
+        <property name="hibernate.hikari.password">password</property>
         <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
-
-        <!-- === PROD (PostgreSQL) ВАРИАНТ — раскомментируй при переходе ===
-        <property name="hibernate.hikari.jdbcUrl">jdbc:postgresql://localhost:5432/tennis</property>
-        <property name="hibernate.hikari.username">postgres</property>
-        <property name="hibernate.hikari.password">secret</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        -->
 
         <!-- Размеры пула -->
         <property name="hibernate.hikari.maximumPoolSize">10</property>
