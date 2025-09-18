@@ -6,11 +6,6 @@ import jakarta.persistence.*;
 @Table(name = "matches")
 public class Match {
 
-    public Match(Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +21,7 @@ public class Match {
 
     @Transient
     private Score score;
+
 
     public Long getId() { return id;}
 
