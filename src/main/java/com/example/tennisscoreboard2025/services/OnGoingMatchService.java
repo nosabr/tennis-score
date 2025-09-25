@@ -12,6 +12,7 @@ public class  OnGoingMatchService {
     public static UUID createMatch(String p1, String p2) {
         Match match = new Match();
         UUID uuid = UUID.randomUUID();
+        return uuid;
     }
 
 }

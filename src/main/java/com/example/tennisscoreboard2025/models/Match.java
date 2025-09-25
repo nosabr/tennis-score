@@ -3,11 +3,12 @@ package com.example.tennisscoreboard2025.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "matches")
+@Table(name = "MATCHES")
 public class Match {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @ManyToOne @JoinColumn(name = "player1_id", nullable = false)
@@ -22,6 +23,8 @@ public class Match {
     @Transient
     private Score score;
 
+    public Match() {
+    }
 
     public Long getId() { return id;}
 
