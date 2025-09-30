@@ -3,14 +3,14 @@ package com.example.tennisscoreboard2025.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "PLAYERS")
+@Table(name = "players")
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = ("NAME"),nullable = false, unique = true)
+    @Column(name = ("name"),nullable = false, unique = true)
     private String name;
 
     public Player() {
