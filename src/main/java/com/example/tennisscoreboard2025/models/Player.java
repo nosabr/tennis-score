@@ -1,9 +1,11 @@
 package com.example.tennisscoreboard2025.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "players")
+@Data
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,14 +15,4 @@ public class Player {
     @Column(name = ("name"),nullable = false, unique = true)
     private String name;
 
-    public Player() {
-    }
-
-    public Player(String name) {
-        this.name = name;
-    }
-
-
-
-    // getters/setters
 }
