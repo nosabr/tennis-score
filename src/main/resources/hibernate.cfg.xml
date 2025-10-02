@@ -9,8 +9,8 @@
         <property name="hibernate.connection.url">
             jdbc:h2:mem:tennisscore;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
         </property>
-        <property name="hibernate.connection.username">sa</property>
-        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.username">admin</property>
+        <property name="hibernate.connection.password">password</property>
 
         <!-- Поведение схемы и логирование -->
         <property name="hibernate.hbm2ddl.auto">update</property>
