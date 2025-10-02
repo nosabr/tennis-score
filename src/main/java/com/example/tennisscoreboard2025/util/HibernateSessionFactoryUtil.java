@@ -1,6 +1,7 @@
 package com.example.tennisscoreboard2025.util;
 import com.example.tennisscoreboard2025.models.Match;
 import com.example.tennisscoreboard2025.models.Player;
+import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -8,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 
 
 public class HibernateSessionFactoryUtil {
+    @Getter
     private static final SessionFactory sessionFactory;
 
     static {
@@ -28,7 +30,4 @@ public class HibernateSessionFactoryUtil {
 
     private HibernateSessionFactoryUtil() {}
 
-    public static SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
 }

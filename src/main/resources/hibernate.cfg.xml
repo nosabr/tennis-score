@@ -5,24 +5,12 @@
 <hibernate-configuration>
     <session-factory>
 
-        <!-- Используем Hikari как провайдер соединений -->
-        <property name="hibernate.connection.provider_class">
-            com.zaxxer.hikari.hibernate.HikariConnectionProvider
+        <property name="hibernate.connection.driver_class">org.h2.Driver</property>
+        <property name="hibernate.connection.url">
+            jdbc:h2:mem:tennisscore;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
         </property>
-
-        <!-- === DEV (H2) ВАРИАНТ === -->
-        <!-- Вариант 1: через jdbcUrl -->
-        <property name="hibernate.hikari.jdbcUrl">jdbc:h2:mem:tennisscore;AUTO_SERVER=TRUE</property>
-        <property name="hibernate.hikari.username">admin</property>
-        <property name="hibernate.hikari.password">password</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
-        <property name="hibernate.current_session_context_class">thread</property>
-
-
-        <!-- Размеры пула -->
-        <property name="hibernate.hikari.maximumPoolSize">10</property>
-        <property name="hibernate.hikari.minimumIdle">2</property>
-        <property name="hibernate.hikari.connectionTimeout">30000</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.connection.password"></property>
 
         <!-- Поведение схемы и логирование -->
         <property name="hibernate.hbm2ddl.auto">update</property>
