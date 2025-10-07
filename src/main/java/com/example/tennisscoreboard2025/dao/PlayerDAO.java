@@ -2,11 +2,9 @@ package com.example.tennisscoreboard2025.dao;
 
 import com.example.tennisscoreboard2025.models.Player;
 import com.example.tennisscoreboard2025.util.HibernateSessionFactoryUtil;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +20,12 @@ public class PlayerDAO {
     public Optional<Player> findByName(String name) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         String hql = "FROM Player WHERE name = :name";
-        List<Player> playersList = session
+        List<Player> players = session
                 .createQuery(hql, Player.class)
                 .setParameter("name", name)
                 .getResultList();
         session.close();
-        return playersList.stream().findFirst();
+        return players.stream().findFirst();
     }
 
     public void save(Player p) {
