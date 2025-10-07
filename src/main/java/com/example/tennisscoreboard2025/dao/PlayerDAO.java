@@ -14,28 +14,20 @@ public class PlayerDAO {
 
     public Optional<Player> findById(int id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-        Optional<Player> player = Optional.of(session.find(Player.class, id));
+        Player player = session.find(Player.class, id);
         session.close();
-        return player;
+        return Optional.ofNullable(player);
     }
 
     public Optional<Player> findByName(String name) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
         String hql = "FROM Player WHERE name = :name";
-        List<Player> playersList = session.createQuery(hql).setParameter("name", name).getResultList();
-        int countPlayers =  playersList.size();
-        if (countPlayers != 0) {
-            return  Optional.of(playersList.get(0));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public List<Player> findAll() {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        return Collections.emptyList(); // dodelat'
+        List<Player> playersList = session
+                .createQuery(hql, Player.class)
+                .setParameter("name", name)
+                .getResultList();
+        session.close();
+        return playersList.stream().findFirst();
     }
 
     public void save(Player p) {
