@@ -26,6 +26,6 @@ public class NewMatchServlet extends HttpServlet {
         String secondPlayerName = req.getParameter("secondPlayer");
         Match match = matchGenerationService.generateNewMatch(firstPlayerName,secondPlayerName);
         UUID uuid = OngoingMatchService.putMatch(match);
-        resp.sendRedirect(req.getContextPath()+"/match?uuid="+uuid.toString());
+        resp.sendRedirect(req.getContextPath()+"/match?uuid="+uuid);
     }
 }

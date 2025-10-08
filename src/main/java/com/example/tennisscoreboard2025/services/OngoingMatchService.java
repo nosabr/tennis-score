@@ -15,8 +15,8 @@ public class OngoingMatchService {
         matches.put(uuid, match);
         return uuid;
     }
-    public static Optional<Match> getMatch(UUID uuid){
-        return  Optional.ofNullable(matches.get(uuid));
+    public static Optional<Match> getMatch(String uuid){
+        return  Optional.ofNullable(matches.get(UUID.fromString(uuid)));
     }
     public static void deleteMatch(UUID uuid){
         matches.remove(uuid);
