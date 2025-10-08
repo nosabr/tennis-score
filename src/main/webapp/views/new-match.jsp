@@ -46,8 +46,8 @@
 
     <main class="content">
         <section class="card" aria-label="Новый матч">
-            <form class="form" id="newMatchForm" action="new-match" method="post" novalidate>
-                <div class="field">
+            <form class="form" id="newMatchForm" action="${pageContext.request.contextPath}/new-match" method="post" novalidate>
+            <div class="field">
                     <label class="label" for="p1">Player 1</label>
                     <input class="input" id="p1" name="p1" type="text" autocomplete="off" placeholder="Ex. Novak" required />
                 </div>
@@ -74,7 +74,7 @@
         const errorBox = document.getElementById('error');
 
         form.addEventListener('submit', function(e){
-            e.preventDefault();
+            //e.preventDefault();
             errorBox.textContent = '';
             const a = (p1.value || '').trim();
             const b = (p2.value || '').trim();
@@ -87,9 +87,6 @@
                 errorBox.textContent = 'Имена игроков не должны совпадать.';
                 return;
             }
-            // Если всё ок — можно перейти на табло и передать имена.
-            const params = new URLSearchParams({ player1: a, player2: b });
-            window.location.href = 'scoreboard.html?' + params.toString();
         });
     })();
 </script>

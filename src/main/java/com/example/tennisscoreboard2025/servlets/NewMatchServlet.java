@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
@@ -20,6 +21,7 @@ public class NewMatchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String p1 =  req.getParameter("p1");
         String p2 = req.getParameter("p2");
-        //Match match = new Match(p1,p2);
+        UUID uuid =  UUID.randomUUID();
+        resp.sendRedirect(req.getContextPath()+"/match?uuid=" + uuid);
     }
 }
