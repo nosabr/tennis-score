@@ -1,6 +1,8 @@
 package com.example.tennisscoreboard2025.servlets;
 
 import com.example.tennisscoreboard2025.models.Match;
+import com.example.tennisscoreboard2025.services.MatchGenerationService;
+import com.example.tennisscoreboard2025.services.OngoingMatchService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
+    MatchGenerationService matchGenerationService = new MatchGenerationService();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/views/new-match.jsp").forward(req,resp);
@@ -19,9 +22,10 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String p1 =  req.getParameter("p1");
-        String p2 = req.getParameter("p2");
-        UUID uuid =  UUID.randomUUID();
-        resp.sendRedirect(req.getContextPath()+"/match?uuid=" + uuid);
+        String firstPlayerName = req.getParameter("firstPlayer");
+        String secondPlayerName = req.getParameter("secondPlayer");
+        Match match = matchGenerationService.generateNewMatch(firstPlayerName,secondPlayerName);
+        UUID uuid = OngoingMatchService.putMatch(match);
+        resp.sendRedirect(req.getContextPath()+"/match?uuid="+uuid.toString());
     }
 }
