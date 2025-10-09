@@ -22,10 +22,11 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String firstPlayerName = req.getParameter("firstPlayer");
-        String secondPlayerName = req.getParameter("secondPlayer");
+        OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
+        String firstPlayerName = req.getParameter("p1");
+        String secondPlayerName = req.getParameter("p2");
         Match match = matchGenerationService.generateNewMatch(firstPlayerName,secondPlayerName);
-        UUID uuid = OngoingMatchService.putMatch(match);
+        UUID uuid = ongoingMatchService.putMatch(match);
         resp.sendRedirect(req.getContextPath()+"/match?uuid="+uuid);
     }
 }
