@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class MatchDAO {
 
-    public Optional<Match> findById(int id) {
+    public Optional<Match> findById(Long id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Match match = session.find(Match.class, id);
         session.close();

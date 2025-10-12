@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class PlayerDAO {
 
-    public Optional<Player> findById(int id) {
+    public Optional<Player> findById(Long id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Player player = session.find(Player.class, id);
         session.close();
