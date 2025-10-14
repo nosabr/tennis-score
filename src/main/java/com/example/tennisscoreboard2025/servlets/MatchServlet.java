@@ -15,8 +15,31 @@ import java.util.UUID;
 
 @WebServlet("/match")
 public class MatchServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-        OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
+    OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
 
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uuid =  req.getParameter("uuid");
+        if(uuid==null || uuid.isEmpty()){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing uuid parameter");
+        }
+        Optional<Match> match = ongoingMatchService.getMatch(UUID.fromString(uuid));
+        if(match.isEmpty()){
+            resp.sendError(404, "Match not found");
+        } else {
+            req.setAttribute("match", match.get());
+            req.getRequestDispatcher("/views/match.jsp").forward(req, resp);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uuid = req.getParameter("uuid");
+        Optional<Match> match = ongoingMatchService.getMatch(UUID.fromString(uuid));
+        if (match.isEmpty()){
+            resp.sendError(502, "Match not found");
+        } else {
+            Match matchObj = match.get();
+
+        }
     }
 }
