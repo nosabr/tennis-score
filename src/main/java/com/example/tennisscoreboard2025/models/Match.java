@@ -24,5 +24,7 @@ public class Match {
 
     @Transient
     private Score score = new Score();
+    @Transient
+    boolean isMatchFinished = false;
 
 }
