@@ -124,8 +124,6 @@
                 <button class="btn" name="player" value="1">+ Point · ${match.player1.name}</button>
                 <button class="btn" name="player" value="2">+ Point · ${match.player2.name}</button>
                 <span style="flex:1"></span>
-                <button class="btn btn-ghost" name="action" value="nextSet">Next set</button>
-                <button class="btn btn-danger" name="action" value="resetGame">Reset game</button>
             </form>
         </section>
     </main>
