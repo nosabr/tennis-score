@@ -19,12 +19,12 @@ public class MatchServlet extends HttpServlet {
     OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String uuid =  req.getParameter("uuid");
-        if(uuid==null || uuid.isEmpty()){
+        String uuid = req.getParameter("uuid");
+        if (uuid == null || uuid.isEmpty()) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing uuid parameter");
         }
         Optional<Match> match = ongoingMatchService.getMatch(UUID.fromString(uuid));
-        if(match.isEmpty()){
+        if (match.isEmpty()) {
             resp.sendError(404, "Match not found");
         } else {
             req.setAttribute("match", match.get());
@@ -34,7 +34,7 @@ public class MatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        MatchService matchService = new MatchService();
+        /*MatchService matchService = new MatchService();
         String uuid =  req.getParameter("uuid");
         HttpSession session = req.getSession();
         int scoredPlayerNumber =  Integer.parseInt(req.getParameter("player"));
@@ -51,6 +51,12 @@ public class MatchServlet extends HttpServlet {
                 matchService.handlePost(uuid, scoredPlayerNumber);
             }
         }
+        resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
+    }*/
+        MatchService matchService = new MatchService();
+        String uuid = req.getParameter("uuid");
+        int scoredPlayerNumber = Integer.parseInt(req.getParameter("player"));
+        matchService.handlePost(uuid, scoredPlayerNumber);
         resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
     }
 }

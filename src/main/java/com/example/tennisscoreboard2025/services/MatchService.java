@@ -11,15 +11,18 @@ public class MatchService {
     Match match;
     MatchDAO matchDAO = new MatchDAO();
     OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
-    public void handlePost(String uuid, int scoredPlayerNumber){
+
+    public void handlePost(String uuid, int scoredPlayerNumber) {
         UUID matchUUID = UUID.fromString(uuid);
-        Optional<Match> matchOpt =  ongoingMatchService.getMatch(matchUUID);
-        if (matchOpt.isPresent()){
+        Match match;
+        Optional<Match> matchOpt = ongoingMatchService.getMatch(matchUUID);
+        if (matchOpt.isPresent()) {
             match = matchOpt.get();
         } else {
-            throw new RuntimeException("Match not found");
+            throw new RuntimeException("no match in uuid: " + uuid);
         }
-        match = scoreService.addPointToPlayer(match,scoredPlayerNumber);
+        ScoreService scoreService = new ScoreService();
+        scoreService.addPointToPlayer(match, scoredPlayerNumber);
     }
 
 }
