@@ -2,16 +2,46 @@ package com.example.tennisscoreboard2025.services;
 
 import com.example.tennisscoreboard2025.models.Match;
 import com.example.tennisscoreboard2025.models.Score;
+import com.example.tennisscoreboard2025.models.scoreUtil.Pair;
 
 public class ScoreService {
     public void addPointToPlayer(Match match, int scoredPlayerNumber) {
         Score score = match.getScore();
         int firstPlayerPoints = score.getFirstPlayerPoints();
         int secondPlayerPoints = score.getSecondPlayerPoints();
+
         if(scoredPlayerNumber == 1){
-            score.setFirstPlayerPoints(getNextPointValue(firstPlayerPoints,score.getGameMode()));
+            if(isGameWon(firstPlayerPoints, secondPlayerPoints)){
+                addGamePointToSet(score, scoredPlayerNumber);
+                resetPoints(score);
+            } else {
+                int nextPointValue = getNextPointValue(firstPlayerPoints, score.getGameMode());
+                score.setFirstPlayerPoints(nextPointValue);
+            }
+        }  else {
+            if(isGameWon(secondPlayerPoints, firstPlayerPoints)){
+                addGamePointToSet(score, scoredPlayerNumber);
+                resetPoints(score);
+            } else {
+                int nextPointValue = getNextPointValue(secondPlayerPoints, score.getGameMode());
+                score.setSecondPlayerPoints(nextPointValue);
+            }
+        }
+
+    }
+
+    private boolean isGameWon(int player1,  int player2) {
+        return player1 == 40 && player2 < 40;
+    }
+
+    private void addGamePointToSet(Score score, int scoredPlayerNumber) {
+        Pair[] sets = score.getSets();
+        int currentSet = score.getCurrentSet();
+
+        if(scoredPlayerNumber == 1){
+            sets[currentSet].setFirst(sets[currentSet].getFirst() + 1);
         } else {
-            score.setSecondPlayerPoints(getNextPointValue(secondPlayerPoints,score.getGameMode()));
+            sets[currentSet].setSecond(sets[currentSet].getSecond() + 1);
         }
     }
 
@@ -34,7 +64,10 @@ public class ScoreService {
         int firstPlayerPoints = score.getFirstPlayerPoints();
         int secondPlayerPoints = score.getSecondPlayerPoints();
         if(score.getGameMode() == 1){
-            
+            if(firstPlayerPoints == 40 && secondPlayerPoints == 40) { // проверка на больше меньше
+                score.setGameMode(2);
+                resetPoints(score);
+            } else if(firstPlayerPoints == 40 && secondPlayerPoints < 30) {}
         } else if(score.getGameMode() == 2){
 
         } else if(score.getGameMode() == 3){
