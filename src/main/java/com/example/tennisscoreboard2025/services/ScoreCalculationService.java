@@ -4,9 +4,9 @@ import com.example.tennisscoreboard2025.models.Match;
 import com.example.tennisscoreboard2025.models.Score;
 import com.example.tennisscoreboard2025.models.scoreUtil.Pair;
 
-public class ScoreService {
-    public void addPointToPlayer(Match match, int scoredPlayerNumber) {
-        Score score = match.getScore();
+public class ScoreCalculationService {
+    public void addPointToPlayer(Score score, int scoredPlayerNumber) {
+        //Score score = match.getScore();
         int firstPlayerPoints = score.getFirstPlayerPoints();
         int secondPlayerPoints = score.getSecondPlayerPoints();
         if(scoredPlayerNumber == 1){
@@ -55,14 +55,16 @@ public class ScoreService {
             }
             checkSetsPoints(score);
         } else if(score.getGameMode() == 2) {
-            if (score.getFirstPlayerPoints() - score.getSecondPlayerPoints() >= 2) {
+            if (score.getFirstPlayerPoints() - score.getSecondPlayerPoints() == 2) {
                 addGamePointToSet(score, 1);
                 resetPoints(score);
                 score.setGameMode(1);
-            } else if (score.getSecondPlayerPoints() - score.getFirstPlayerPoints() >= 2) {
+            } else if (score.getSecondPlayerPoints() - score.getFirstPlayerPoints() == 2) {
                 addGamePointToSet(score, 2);
                 resetPoints(score);
                 score.setGameMode(1);
+            } else if (score.getFirstPlayerPoints() == 1 && score.getSecondPlayerPoints() == 1) {
+                resetPoints(score);
             }
             checkSetsPoints(score);
         } else if(score.getGameMode() == 3) {

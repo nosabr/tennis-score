@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class MatchService {
-    ScoreService scoreService = new ScoreService();
+    ScoreCalculationService scoreCalculationService = new ScoreCalculationService();
     Match match;
     MatchDAO matchDAO = new MatchDAO();
     OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
@@ -21,8 +21,8 @@ public class MatchService {
         } else {
             throw new RuntimeException("no match in uuid: " + uuid);
         }
-        ScoreService scoreService = new ScoreService();
-        scoreService.addPointToPlayer(match, scoredPlayerNumber);
+        ScoreCalculationService scoreCalculationService = new ScoreCalculationService();
+        scoreCalculationService.addPointToPlayer(match.getScore(), scoredPlayerNumber);
     }
 
 }
