@@ -9,35 +9,18 @@ public class ScoreService {
         Score score = match.getScore();
         int firstPlayerPoints = score.getFirstPlayerPoints();
         int secondPlayerPoints = score.getSecondPlayerPoints();
-
         if(scoredPlayerNumber == 1){
-            if(isGameWon(firstPlayerPoints, secondPlayerPoints)){
-                addGamePointToSet(score, scoredPlayerNumber);
-                resetPoints(score);
-            } else {
-                int nextPointValue = getNextPointValue(firstPlayerPoints, score.getGameMode());
-                score.setFirstPlayerPoints(nextPointValue);
-            }
-        }  else {
-            if(isGameWon(secondPlayerPoints, firstPlayerPoints)){
-                addGamePointToSet(score, scoredPlayerNumber);
-                resetPoints(score);
-            } else {
-                int nextPointValue = getNextPointValue(secondPlayerPoints, score.getGameMode());
-                score.setSecondPlayerPoints(nextPointValue);
-            }
+            score.setFirstPlayerPoints(getNextPointValue(firstPlayerPoints, score.getGameMode()));
+        } else {
+            score.setSecondPlayerPoints(getNextPointValue(secondPlayerPoints, score.getGameMode()));
         }
-
+        checkGameState(score);
     }
 
-    private boolean isGameWon(int player1,  int player2) {
-        return player1 == 40 && player2 < 40;
-    }
 
     private void addGamePointToSet(Score score, int scoredPlayerNumber) {
         Pair[] sets = score.getSets();
         int currentSet = score.getCurrentSet();
-
         if(scoredPlayerNumber == 1){
             sets[currentSet].setFirst(sets[currentSet].getFirst() + 1);
         } else {
@@ -52,30 +35,69 @@ public class ScoreService {
             } else {
                 return playerPoints + 10;
             }
-        } else if(gameMode == 2){
-            return playerPoints + 1;
-        } else if(gameMode == 3){
+        } else if(gameMode == 2 || gameMode == 3){
             return playerPoints + 1;
         }
         return 0;
     }
 
-    private void checkScoreState(Score score) {
-        int firstPlayerPoints = score.getFirstPlayerPoints();
-        int secondPlayerPoints = score.getSecondPlayerPoints();
+    private void checkGameState(Score score) {
         if(score.getGameMode() == 1){
-            if(firstPlayerPoints == 40 && secondPlayerPoints == 40) { // проверка на больше меньше
-                score.setGameMode(2);
+            if (score.getFirstPlayerPoints() > 40 && score.getSecondPlayerPoints() < 40) {
+                addGamePointToSet(score, 1);
                 resetPoints(score);
-            } else if(firstPlayerPoints == 40 && secondPlayerPoints < 30) {}
-        } else if(score.getGameMode() == 2){
-
-        } else if(score.getGameMode() == 3){
-
+            } else if (score.getSecondPlayerPoints() > 40 && score.getFirstPlayerPoints() < 40) {
+                addGamePointToSet(score, 2);
+                resetPoints(score);
+            } else if(score.getFirstPlayerPoints() == 40 && score.getSecondPlayerPoints() == 40) {
+                score.setGameMode(2); // Больше меньше
+                resetPoints(score);
+            }
+            checkSetsPoints(score);
+        } else if(score.getGameMode() == 2) {
+            if (score.getFirstPlayerPoints() - score.getSecondPlayerPoints() >= 2) {
+                addGamePointToSet(score, 1);
+                resetPoints(score);
+                score.setGameMode(1);
+            } else if (score.getSecondPlayerPoints() - score.getFirstPlayerPoints() >= 2) {
+                addGamePointToSet(score, 2);
+                resetPoints(score);
+                score.setGameMode(1);
+            }
+            checkSetsPoints(score);
+        } else if(score.getGameMode() == 3) {
+            if(score.getFirstPlayerPoints() - score.getSecondPlayerPoints() >= 2
+                    && score.getFirstPlayerPoints() > 6) {
+                addGamePointToSet(score, 1);
+                resetPoints(score);
+                score.setGameMode(1);
+                score.setCurrentSet(score.getCurrentSet() + 1);
+            } else if(score.getSecondPlayerPoints() - score.getFirstPlayerPoints() >= 2
+                    && score.getSecondPlayerPoints() > 6) {
+                addGamePointToSet(score, 2);
+                resetPoints(score);
+                score.setGameMode(1);
+                score.setCurrentSet(score.getCurrentSet() + 1);
+            }
         }
-
     }
 
+    private void checkSetsPoints(Score score) {
+        int currentSet = score.getCurrentSet();
+        Pair[] sets = score.getSets();
+        int firstPlayerSetPoints = sets[currentSet].getFirst();
+        int secondPlayerSetPoints = sets[currentSet].getSecond();
+        if(firstPlayerSetPoints - secondPlayerSetPoints >= 2 && firstPlayerSetPoints >= 6){
+            resetPoints(score);
+            score.setCurrentSet(currentSet + 1);
+        } else if (secondPlayerSetPoints - firstPlayerSetPoints >= 2 && secondPlayerSetPoints >= 6) {
+            resetPoints(score);
+            score.setCurrentSet(currentSet + 1);
+        } else if (firstPlayerSetPoints == 6 && secondPlayerSetPoints == 6) {
+            resetPoints(score);
+            score.setGameMode(3);
+        }
+    }
 
     private void resetPoints(Score score) {
         score.setFirstPlayerPoints(0);
