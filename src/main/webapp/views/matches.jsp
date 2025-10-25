@@ -184,7 +184,7 @@
                                     </span>
                                 </div>
                                 <div class="match-score">
-                                    Счёт: ${match.player1Score} : ${match.player2Score}
+<%--                                    Счёт: ${match.player1Score} : ${match.player2Score}--%>
                                     <br>
                                     <strong>Победитель: ${match.winner.name}</strong>
                                 </div>
