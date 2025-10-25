@@ -1,15 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tennis Scoreboard — Match</title>
+    <title>Tennis Scoreboard — Matches</title>
     <style>
         :root{
             --bg:#0b0f17;--panel:#111827;--text:#e5e7eb;--muted:#9ca3af;
             --divider:#1f2937;--radius:12px;--shadow:0 4px 16px rgba(0,0,0,.25);
-            --accent:#22d3ee;--danger:#ef4444;
+            --accent:#22d3ee;--danger:#ef4444;--success:#10b981;
         }
         html,body{
             height:100%;margin:0;background:var(--bg);color:var(--text);
@@ -27,45 +28,98 @@
             box-shadow:var(--shadow);
             padding:24px;
         }
-        .title{font-weight:800;font-size:18px;margin-bottom:6px;}
-        .sub{color:var(--muted);font-size:13px;margin-bottom:16px;}
-        .sets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
-        .set{
-            padding:6px 10px;border-radius:8px;
+        .title{font-weight:800;font-size:18px;margin-bottom:16px;}
+        .breadcrumbs{color:var(--muted);font-size:14px;margin-bottom:14px;}
+        .breadcrumbs a{color:var(--muted);text-decoration:none;}
+        .breadcrumbs a:hover{color:var(--accent);}
+
+        .search-form{
+            display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+            padding:16px;background:#0f1522;border-radius:var(--radius);
             border:1px solid var(--divider);
-            background:#0f1522;color:var(--muted);font-size:13px;
         }
-        .set.active{border-color:var(--accent);color:var(--accent);font-weight:700;}
-
-        table{
-            width:100%;border-collapse:collapse;background:#0f1522;
-            border-radius:var(--radius);overflow:hidden;margin-bottom:16px;
+        .search-form input[type="text"]{
+            flex:1;min-width:200px;
+            appearance:none;border:1px solid var(--divider);
+            background:var(--panel);color:var(--text);
+            padding:10px 14px;border-radius:8px;font-size:15px;
+            transition:border-color .15s;
         }
-        th,td{
-            padding:14px 12px;border-bottom:1px solid var(--divider);text-align:center;
-        }
-        th{color:var(--muted);font-weight:600;background:#101520;}
-        td:first-child,th:first-child{text-align:left;}
-        tr:hover td{background:#0d1320;}
-        .player-name{font-weight:600;}
-
-        .actions{
-            display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;
+        .search-form input[type="text"]:focus{
+            outline:none;border-color:var(--accent);
         }
         .btn{
             appearance:none;border:1px solid rgba(34,211,238,.55);
             background:rgba(34,211,238,.08);color:var(--text);
-            padding:12px 18px;border-radius:12px;font-weight:700;
-            cursor:pointer;transition:all .15s;
+            padding:10px 18px;border-radius:8px;font-weight:600;
+            cursor:pointer;transition:all .15s;text-decoration:none;
+            display:inline-block;font-size:15px;
         }
         .btn:hover{background:rgba(34,211,238,.14);}
         .btn-ghost{border-color:var(--divider);background:#0f1522;}
-        .btn-danger{border-color:#fecaca;background:#7f1d1d;color:#fee2e2;}
+        .btn-ghost:hover{background:#101520;}
+
+        .info-text{
+            color:var(--muted);font-size:14px;margin-bottom:16px;
+        }
+        .info-text strong{color:var(--text);}
+
+        .matches-list{list-style:none;padding:0;margin:0 0 20px;}
+        .match-item{
+            background:#0f1522;border:1px solid var(--divider);
+            border-radius:var(--radius);padding:16px;margin-bottom:12px;
+            transition:all .15s;
+        }
+        .match-item:hover{
+            border-color:rgba(34,211,238,.4);
+            box-shadow:0 2px 8px rgba(34,211,238,.1);
+        }
+        .match-header{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:10px;
+        }
+        .match-id{color:var(--muted);font-size:13px;}
+        .match-players{font-size:17px;font-weight:600;margin-bottom:8px;}
+        .winner{color:var(--success);}
+        .loser{color:var(--muted);}
+        .match-score{color:var(--muted);font-size:14px;}
+        .match-score strong{color:var(--text);}
+
+        .pagination{
+            display:flex;justify-content:center;align-items:center;
+            gap:8px;margin-top:24px;flex-wrap:wrap;
+        }
+        .pagination a,
+        .pagination span{
+            padding:8px 12px;border:1px solid var(--divider);
+            border-radius:8px;text-decoration:none;color:var(--text);
+            transition:all .15s;min-width:40px;text-align:center;
+            background:#0f1522;font-size:14px;
+        }
+        .pagination a:hover{
+            border-color:var(--accent);background:rgba(34,211,238,.08);
+        }
+        .pagination .current{
+            background:rgba(34,211,238,.12);border-color:var(--accent);
+            color:var(--accent);font-weight:700;
+        }
+        .pagination .disabled{
+            opacity:.4;cursor:not-allowed;
+        }
+        .pagination .dots{border:none;background:transparent;}
+
+        .no-matches{
+            text-align:center;padding:48px 20px;
+            color:var(--muted);font-size:16px;
+        }
+
         .footer{max-width:960px;margin:18px auto 28px;color:var(--muted);font-size:14px;text-align:center;}
-        code{background:#0f1522;border:1px solid var(--divider);padding:2px 6px;border-radius:6px;}
-        .breadcrumbs{color:var(--muted);font-size:14px;margin-bottom:14px;}
-        .breadcrumbs a{color:var(--muted);text-decoration:none;}
-        .breadcrumbs a:hover{color:var(--accent);}
+
+        @media (max-width: 600px) {
+            .search-form{flex-direction:column;}
+            .search-form input[type="text"]{width:100%;}
+            .match-header{flex-direction:column;align-items:flex-start;gap:4px;}
+        }
     </style>
 </head>
 <body>
@@ -75,58 +129,128 @@
     </header>
 
     <main class="content">
-        <section class="card" aria-label="Текущий матч">
+        <section class="card" aria-label="Список матчей">
             <div class="breadcrumbs">
                 <a href="${pageContext.request.contextPath}/home">Home</a> ·
-                <a href="${pageContext.request.contextPath}/matches">Matches</a> ·
-                <span>Match</span>
+                <span>Matches</span>
             </div>
 
-            <div class="title">${match.player1.name} vs ${match.player2.name}</div>
-            <div class="sub">Match ID: <code>${param.uuid}</code></div>
+            <div class="title">🎾 Сыгранные матчи</div>
 
-            <div class="sets">
-                <div class="set ${match.score.currentSet == 0 ? 'active' : ''}">Set 1</div>
-                <div class="set ${match.score.currentSet == 1 ? 'active' : ''}">Set 2</div>
-                <div class="set ${match.score.currentSet == 2 ? 'active' : ''}">Set 3</div>
-            </div>
-
-            <table>
-                <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Points</th>
-                    <th>Set 1</th>
-                    <th>Set 2</th>
-                    <th>Set 3</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="player-name">${match.player1.name}</td>
-                    <td>${match.score.firstPlayerPoints}</td>
-                    <td>${match.score.sets[0].first}</td>
-                    <td>${match.score.sets[1].first}</td>
-                    <td>${match.score.sets[2].first}</td>
-                </tr>
-                <tr>
-                    <td class="player-name">${match.player2.name}</td>
-                    <td>${match.score.secondPlayerPoints}</td>
-                    <td>${match.score.sets[0].second}</td>
-                    <td>${match.score.sets[1].second}</td>
-                    <td>${match.score.sets[2].second}</td>
-                </tr>
-                </tbody>
-            </table>
-
-            <form class="actions" method="post" action="">
-                <input type="hidden" name="uuid" value="${param.uuid}">
-                <button class="btn" name="player" value="1">+ Point · ${match.player1.name}</button>
-                <button class="btn" name="player" value="2">+ Point · ${match.player2.name}</button>
-                <span style="flex:1"></span>
-                <button class="btn btn-ghost" name="action" value="nextSet">Next set</button>
-                <button class="btn btn-danger" name="action" value="resetGame">Reset game</button>
+            <!-- Форма поиска -->
+            <form class="search-form" action="${pageContext.request.contextPath}/matches" method="GET">
+                <input
+                        type="text"
+                        name="filter_by_player_name"
+                        placeholder="Введите имя игрока..."
+                        value="${filterByPlayerName != null ? filterByPlayerName : ''}"
+                >
+                <button type="submit" class="btn">🔍 Искать</button>
+                <c:if test="${filterByPlayerName != null && !filterByPlayerName.isEmpty()}">
+                    <a href="${pageContext.request.contextPath}/matches" class="btn btn-ghost">Сбросить</a>
+                </c:if>
             </form>
+
+            <!-- Информация о результатах -->
+            <c:if test="${totalMatches > 0}">
+                <p class="info-text">
+                    <c:choose>
+                        <c:when test="${filterByPlayerName != null && !filterByPlayerName.isEmpty()}">
+                            Найдено матчей для игрока "<strong>${filterByPlayerName}</strong>": ${totalMatches}
+                        </c:when>
+                        <c:otherwise>
+                            Всего матчей: <strong>${totalMatches}</strong>
+                        </c:otherwise>
+                    </c:choose>
+                </p>
+            </c:if>
+
+            <!-- Список матчей -->
+            <c:choose>
+                <c:when test="${matches != null && matches.size() > 0}">
+                    <ul class="matches-list">
+                        <c:forEach var="match" items="${matches}">
+                            <li class="match-item">
+                                <div class="match-header">
+                                    <span class="match-id">Match #${match.id}</span>
+                                </div>
+                                <div class="match-players">
+                                    <span class="${match.winner.id == match.player1.id ? 'winner' : 'loser'}">
+                                            ${match.player1.name}
+                                    </span>
+                                    <span style="color:var(--muted);"> vs </span>
+                                    <span class="${match.winner.id == match.player2.id ? 'winner' : 'loser'}">
+                                            ${match.player2.name}
+                                    </span>
+                                </div>
+                                <div class="match-score">
+                                    Счёт: ${match.player1Score} : ${match.player2Score}
+                                    <br>
+                                    <strong>Победитель: ${match.winner.name}</strong>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </ul>
+
+                    <!-- Пагинация -->
+                    <c:if test="${totalPages > 1}">
+                        <div class="pagination">
+                            <!-- Предыдущая страница -->
+                            <c:choose>
+                                <c:when test="${currentPage > 1}">
+                                    <a href="?page=${currentPage - 1}<c:if test='${filterByPlayerName != null}'>&filter_by_player_name=${filterByPlayerName}</c:if>">
+                                        ← Назад
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="disabled">← Назад</span>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <!-- Номера страниц -->
+                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                <c:choose>
+                                    <c:when test="${i == currentPage}">
+                                        <span class="current">${i}</span>
+                                    </c:when>
+                                    <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
+                                        <a href="?page=${i}<c:if test='${filterByPlayerName != null}'>&filter_by_player_name=${filterByPlayerName}</c:if>">
+                                                ${i}
+                                        </a>
+                                    </c:when>
+                                    <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
+                                        <span class="dots">...</span>
+                                    </c:when>
+                                </c:choose>
+                            </c:forEach>
+
+                            <!-- Следующая страница -->
+                            <c:choose>
+                                <c:when test="${currentPage < totalPages}">
+                                    <a href="?page=${currentPage + 1}<c:if test='${filterByPlayerName != null}'>&filter_by_player_name=${filterByPlayerName}</c:if>">
+                                        Вперёд →
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="disabled">Вперёд →</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <div class="no-matches">
+                        <c:choose>
+                            <c:when test="${filterByPlayerName != null && !filterByPlayerName.isEmpty()}">
+                                🔍 Матчи для игрока "${filterByPlayerName}" не найдены
+                            </c:when>
+                            <c:otherwise>
+                                📭 Пока не сыграно ни одного матча
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </section>
     </main>
 
