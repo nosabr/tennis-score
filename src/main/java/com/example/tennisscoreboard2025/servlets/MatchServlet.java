@@ -34,29 +34,19 @@ public class MatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        /*MatchService matchService = new MatchService();
-        String uuid =  req.getParameter("uuid");
-        HttpSession session = req.getSession();
-        int scoredPlayerNumber =  Integer.parseInt(req.getParameter("player"));
-        Optional<Match> match = ongoingMatchService.getMatch(UUID.fromString(uuid));
-        if(match.isEmpty()){
-            resp.sendError(404, "Match not found");
-        } else {
-            if(match.get().isMatchFinished()){
-                session.setAttribute("flashMsg", "🎾 Игра закончена! Начните новый матч или откройте список матчей.");
-                session.setAttribute("flashType", "info");
-                resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
-                // ПОМЕНЯТЬ ЗДЕСЬ ПОТОМ ЛОГИКУ ЕСЛИ ИГРА УЖЕ ЗАКОНЧЕНА
-            } else {
-                matchService.handlePost(uuid, scoredPlayerNumber);
-            }
-        }
-        resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
-    }*/
         MatchService matchService = new MatchService();
         String uuid = req.getParameter("uuid");
+        Optional<Match> matchOpt = ongoingMatchService.getMatch(UUID.fromString(uuid));
+        Match match;
         int scoredPlayerNumber = Integer.parseInt(req.getParameter("player"));
-        matchService.handlePost(uuid, scoredPlayerNumber);
-        resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
+        if (matchOpt.isPresent()) {
+            match = matchOpt.get();
+        } else {
+            throw new RuntimeException("no match in uuid: " + uuid);
+        }
+        if(!match.isMatchFinished()){
+            matchService.handlePost(uuid, scoredPlayerNumber);
+            resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
+        }
     }
 }

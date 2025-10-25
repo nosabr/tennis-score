@@ -8,9 +8,8 @@ import java.util.UUID;
 
 public class MatchService {
     ScoreCalculationService scoreCalculationService = new ScoreCalculationService();
-    Match match;
-    MatchDAO matchDAO = new MatchDAO();
     OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
+    FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
     public void handlePost(String uuid, int scoredPlayerNumber) {
         UUID matchUUID = UUID.fromString(uuid);
@@ -21,8 +20,11 @@ public class MatchService {
         } else {
             throw new RuntimeException("no match in uuid: " + uuid);
         }
-        ScoreCalculationService scoreCalculationService = new ScoreCalculationService();
-        scoreCalculationService.addPointToPlayer(match.getScore(), scoredPlayerNumber);
+        if(match.getScore().getCurrentSet() == 3 && !match.isMatchFinished()) {
+            finishedMatchesPersistenceService.endMatchAndSaveToDB(uuid);
+        } else {
+            scoreCalculationService.addPointToPlayer(match.getScore(), scoredPlayerNumber);
+        }
     }
 
 }

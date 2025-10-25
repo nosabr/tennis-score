@@ -2,6 +2,7 @@ package com.example.tennisscoreboard2025.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
 @Entity
 @Table(name = "MATCHES")
@@ -25,6 +26,5 @@ public class Match {
     @Transient
     private Score score = new Score();
     @Transient
-    boolean isMatchFinished = true;
-
+    boolean isMatchFinished = false;
 }
