@@ -1,15 +1,23 @@
 package com.example.tennisscoreboard2025.daotests;
 
+import com.example.tennisscoreboard2025.models.Match;
 import com.example.tennisscoreboard2025.models.Score;
 import com.example.tennisscoreboard2025.models.scoreUtil.Pair;
+import com.example.tennisscoreboard2025.services.MatchGenerationService;
+import com.example.tennisscoreboard2025.services.OngoingMatchService;
 import com.example.tennisscoreboard2025.services.ScoreCalculationService;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MatchScoreTests{
     ScoreCalculationService scoreCalculationService = new ScoreCalculationService();
+    MatchGenerationService matchGenerationService = new MatchGenerationService();
+    OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
 
     @Test
     public void PointsAddTest(){
@@ -91,8 +99,30 @@ public class MatchScoreTests{
     }
 
     @Test
-    public void MatchEndingTest(){}
+    public void MatchEndingTest(){
+        Match match = matchGenerationService.generateNewMatch("Pupa", "Lupa");
+        UUID uuid = ongoingMatchService.putMatch(match);
+        Optional<Match> matchOpt = ongoingMatchService.getMatch(uuid);
+        if (matchOpt.isPresent()) {
+            match = matchOpt.get();
+        }
+        addSet(match.getScore(),1,6);
+        addSet(match.getScore(),1,6);
+        addSet(match.getScore(),1,6);
+        addPoints(match.getScore(),1,1);
+        assertTrue(match.isMatchFinished());
+    }
 
+    private void addSet(Score score, int player, int sets){
+        for(int i = 0; i < sets; i++){
+            addGame(score,player,6);
+        }
+    }
+    private void addGame(Score score, int player, int games){
+        for(int i = 0; i < games; i++){
+            addPoints(score,player,4);
+        }
+    }
     private void addPoints(Score score, int player, int points){
         for(int i = 0; i < points; i++){
             scoreCalculationService.addPointToPlayer(score, player);

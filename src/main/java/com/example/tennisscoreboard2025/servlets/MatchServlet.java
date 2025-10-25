@@ -25,7 +25,8 @@ public class MatchServlet extends HttpServlet {
         }
         Optional<Match> match = ongoingMatchService.getMatch(UUID.fromString(uuid));
         if (match.isEmpty()) {
-            resp.sendError(404, "Match not found");
+            //resp.sendError(404, "Match not found");
+            req.getRequestDispatcher("views/home.jsp").forward(req,resp);
         } else {
             req.setAttribute("match", match.get());
             req.getRequestDispatcher("/views/match.jsp").forward(req, resp);

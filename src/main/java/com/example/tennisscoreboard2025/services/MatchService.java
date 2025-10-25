@@ -20,11 +20,13 @@ public class MatchService {
         } else {
             throw new RuntimeException("no match in uuid: " + uuid);
         }
-        if(match.getScore().getCurrentSet() == 3 && !match.isMatchFinished()) {
-            finishedMatchesPersistenceService.endMatchAndSaveToDB(uuid);
-        } else {
-            scoreCalculationService.addPointToPlayer(match.getScore(), scoredPlayerNumber);
+        if (!match.isMatchFinished()){
+            scoreCalculationService.addPointToPlayer(match.getScore(),scoredPlayerNumber);
         }
+        if(match.getScore().getCurrentSet() == 3 && !match.isMatchFinished()){
+            finishedMatchesPersistenceService.endMatchAndSaveToDB(uuid);
+        }
+
     }
 
 }
