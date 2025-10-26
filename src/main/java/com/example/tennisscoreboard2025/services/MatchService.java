@@ -24,7 +24,7 @@ public class MatchService {
             scoreCalculationService.addPointToPlayer(match.getScore(),scoredPlayerNumber);
         }
         if(match.getScore().getCurrentSet() == 3 && !match.isMatchFinished()){
-            finishedMatchesPersistenceService.endMatchAndSaveToDB(uuid);
+            finishedMatchesPersistenceService.endMatch(uuid);
         }
 
     }

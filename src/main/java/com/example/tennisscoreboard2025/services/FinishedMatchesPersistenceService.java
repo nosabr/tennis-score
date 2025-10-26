@@ -12,7 +12,7 @@ import java.util.UUID;
 public class FinishedMatchesPersistenceService {
     OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
     MatchDAO matchDAO = new MatchDAO();
-    public void endMatchAndSaveToDB(String uuid) {
+    public void endMatch(String uuid) {
         Match match;
         Optional<Match> matchOpt = ongoingMatchService.getMatch(UUID.fromString(uuid));
         if (matchOpt.isPresent()) {

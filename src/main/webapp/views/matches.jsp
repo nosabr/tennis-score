@@ -18,10 +18,10 @@
         }
         .page{min-height:100%;display:grid;grid-template-rows:auto 1fr auto;}
         .header{background:var(--panel);border-bottom:1px solid var(--divider);}
-        .header__inner{max-width:960px;margin:0 auto;padding:16px;text-align:center;font-weight:700;font-size:20px;}
+        .header__inner{max-width:1200px;margin:0 auto;padding:16px;text-align:center;font-weight:700;font-size:20px;}
         .content{display:grid;place-items:start center;padding:32px;}
         .card{
-            width:min(960px,100%);
+            width:min(1200px,100%);
             background:var(--panel);
             border:1px solid var(--divider);
             border-radius:var(--radius);
@@ -64,26 +64,64 @@
         }
         .info-text strong{color:var(--text);}
 
-        .matches-list{list-style:none;padding:0;margin:0 0 20px;}
-        .match-item{
-            background:#0f1522;border:1px solid var(--divider);
-            border-radius:var(--radius);padding:16px;margin-bottom:12px;
-            transition:all .15s;
+        /* Таблица матчей */
+        .matches-table-wrapper{
+            overflow-x:auto;
+            margin-bottom:20px;
+            border-radius:var(--radius);
+            border:1px solid var(--divider);
         }
-        .match-item:hover{
-            border-color:rgba(34,211,238,.4);
-            box-shadow:0 2px 8px rgba(34,211,238,.1);
+        .matches-table{
+            width:100%;
+            border-collapse:collapse;
+            background:#0f1522;
         }
-        .match-header{
-            display:flex;justify-content:space-between;align-items:center;
-            margin-bottom:10px;
+        .matches-table th{
+            background:var(--panel);
+            color:var(--muted);
+            text-align:left;
+            padding:14px 16px;
+            font-weight:600;
+            font-size:14px;
+            text-transform:uppercase;
+            letter-spacing:0.5px;
+            border-bottom:1px solid var(--divider);
         }
-        .match-id{color:var(--muted);font-size:13px;}
-        .match-players{font-size:17px;font-weight:600;margin-bottom:8px;}
-        .winner{color:var(--success);}
-        .loser{color:var(--muted);}
-        .match-score{color:var(--muted);font-size:14px;}
-        .match-score strong{color:var(--text);}
+        .matches-table th:first-child{
+            border-top-left-radius:var(--radius);
+        }
+        .matches-table th:last-child{
+            border-top-right-radius:var(--radius);
+        }
+        .matches-table td{
+            padding:16px;
+            border-bottom:1px solid var(--divider);
+            font-size:15px;
+        }
+        .matches-table tr:last-child td{
+            border-bottom:none;
+        }
+        .matches-table tr:hover{
+            background:rgba(34,211,238,.04);
+        }
+        .match-id-cell{
+            color:var(--muted);
+            font-weight:600;
+            white-space:nowrap;
+        }
+        .player-cell{
+            font-weight:600;
+        }
+        .winner{
+            color:var(--success);
+        }
+        .loser{
+            color:var(--danger);
+        }
+        .vs-separator{
+            color:var(--muted);
+            padding:0 8px;
+        }
 
         .pagination{
             display:flex;justify-content:center;align-items:center;
@@ -113,12 +151,14 @@
             color:var(--muted);font-size:16px;
         }
 
-        .footer{max-width:960px;margin:18px auto 28px;color:var(--muted);font-size:14px;text-align:center;}
+        .footer{max-width:1200px;margin:18px auto 28px;color:var(--muted);font-size:14px;text-align:center;}
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .search-form{flex-direction:column;}
             .search-form input[type="text"]{width:100%;}
-            .match-header{flex-direction:column;align-items:flex-start;gap:4px;}
+            .matches-table{font-size:14px;}
+            .matches-table th,
+            .matches-table td{padding:10px 12px;}
         }
     </style>
 </head>
@@ -165,32 +205,41 @@
                 </p>
             </c:if>
 
-            <!-- Список матчей -->
+            <!-- Таблица матчей -->
             <c:choose>
                 <c:when test="${matches != null && matches.size() > 0}">
-                    <ul class="matches-list">
-                        <c:forEach var="match" items="${matches}">
-                            <li class="match-item">
-                                <div class="match-header">
-                                    <span class="match-id">Match #${match.id}</span>
-                                </div>
-                                <div class="match-players">
-                                    <span class="${match.winner.id == match.player1.id ? 'winner' : 'loser'}">
-                                            ${match.player1.name}
-                                    </span>
-                                    <span style="color:var(--muted);"> vs </span>
-                                    <span class="${match.winner.id == match.player2.id ? 'winner' : 'loser'}">
-                                            ${match.player2.name}
-                                    </span>
-                                </div>
-                                <div class="match-score">
-<%--                                    Счёт: ${match.player1Score} : ${match.player2Score}--%>
-                                    <br>
-                                    <strong>Победитель: ${match.winner.name}</strong>
-                                </div>
-                            </li>
-                        </c:forEach>
-                    </ul>
+                    <div class="matches-table-wrapper">
+                        <table class="matches-table">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Игрок 1</th>
+                                <th>Игрок 2</th>
+                                <th>Победитель</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="match" items="${matches}">
+                                <tr>
+                                    <td class="match-id-cell">#${match.id}</td>
+                                    <td class="player-cell">
+                                        <span class="${match.winner.id == match.player1.id ? 'winner' : 'loser'}">
+                                                ${match.player1.name}
+                                        </span>
+                                    </td>
+                                    <td class="player-cell">
+                                        <span class="${match.winner.id == match.player2.id ? 'winner' : 'loser'}">
+                                                ${match.player2.name}
+                                        </span>
+                                    </td>
+                                    <td class="player-cell winner">
+                                        🏆 ${match.winner.name}
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <!-- Пагинация -->
                     <c:if test="${totalPages > 1}">

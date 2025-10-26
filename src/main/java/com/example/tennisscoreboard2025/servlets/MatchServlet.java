@@ -25,7 +25,6 @@ public class MatchServlet extends HttpServlet {
         }
         Optional<Match> match = ongoingMatchService.getMatch(UUID.fromString(uuid));
         if (match.isEmpty()) {
-            //resp.sendError(404, "Match not found");
             req.getRequestDispatcher("views/home.jsp").forward(req,resp);
         } else {
             req.setAttribute("match", match.get());
@@ -46,7 +45,14 @@ public class MatchServlet extends HttpServlet {
             throw new RuntimeException("no match in uuid: " + uuid);
         }
         if(!match.isMatchFinished()){
+            boolean wasOngoing = !match.isMatchFinished();
             matchService.handlePost(uuid, scoredPlayerNumber);
+            if(wasOngoing &&  match.isMatchFinished()){
+                req.setAttribute("match", match);
+                req.setAttribute("matchJustFinished", true);
+                req.getRequestDispatcher("/views/match.jsp").forward(req,resp);
+                return;
+            }
             resp.sendRedirect(req.getContextPath() + "/match?uuid=" + uuid);
         }
     }
