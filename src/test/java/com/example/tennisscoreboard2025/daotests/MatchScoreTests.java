@@ -1,9 +1,10 @@
 package com.example.tennisscoreboard2025.daotests;
 
+import com.example.tennisscoreboard2025.dao.MatchDAO;
 import com.example.tennisscoreboard2025.models.Match;
 import com.example.tennisscoreboard2025.models.Score;
-import com.example.tennisscoreboard2025.models.scoreUtil.Pair;
 import com.example.tennisscoreboard2025.services.MatchGenerationService;
+import com.example.tennisscoreboard2025.services.MatchService;
 import com.example.tennisscoreboard2025.services.OngoingMatchService;
 import com.example.tennisscoreboard2025.services.ScoreCalculationService;
 import org.junit.jupiter.api.Test;
@@ -11,14 +12,14 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchScoreTests{
     ScoreCalculationService scoreCalculationService = new ScoreCalculationService();
     MatchGenerationService matchGenerationService = new MatchGenerationService();
     OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
-
+    MatchService matchService = new MatchService();
+    MatchDAO matchDAO = new MatchDAO();
     @Test
     public void PointsAddTest(){
         Score score = new Score();
@@ -102,26 +103,20 @@ public class MatchScoreTests{
     public void MatchEndingTest(){
         Match match = matchGenerationService.generateNewMatch("Pupa", "Lupa");
         UUID uuid = ongoingMatchService.putMatch(match);
+        String uuidStr =  uuid.toString();
         Optional<Match> matchOpt = ongoingMatchService.getMatch(uuid);
         if (matchOpt.isPresent()) {
             match = matchOpt.get();
         }
-        addSet(match.getScore(),1,6);
-        addSet(match.getScore(),1,6);
-        addSet(match.getScore(),1,6);
-        addPoints(match.getScore(),1,1);
+        match.getScore().setCurrentSet(2);
+        match.getScore().setFirstPlayerPoints(40);
+        match.getScore().getSets()[2].setSecond(6);
+        matchService.handlePost(uuidStr,1);
         assertTrue(match.isMatchFinished());
-    }
-
-    private void addSet(Score score, int player, int sets){
-        for(int i = 0; i < sets; i++){
-            addGame(score,player,6);
-        }
-    }
-    private void addGame(Score score, int player, int games){
-        for(int i = 0; i < games; i++){
-            addPoints(score,player,4);
-        }
+        assertTrue(ongoingMatchService.getMatch(uuid).isEmpty());
+        assertTrue(matchDAO.findById(1L).isPresent());
+        assertTrue(matchDAO.findByName("Pupa").isPresent());
+        assertTrue(matchDAO.findByName("Lupa").isPresent());
     }
     private void addPoints(Score score, int player, int points){
         for(int i = 0; i < points; i++){
