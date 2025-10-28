@@ -74,7 +74,7 @@
         const errorBox = document.getElementById('error');
 
         form.addEventListener('submit', function(e){
-            //e.preventDefault();
+            e.preventDefault();
             errorBox.textContent = '';
             const a = (p1.value || '').trim();
             const b = (p2.value || '').trim();
@@ -87,6 +87,7 @@
                 errorBox.textContent = 'Имена игроков не должны совпадать.';
                 return;
             }
+            form.submit();
         });
     })();
 </script>
